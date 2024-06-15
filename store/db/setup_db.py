@@ -1,10 +1,10 @@
-from .client import db_client
+from store.db.client import db_client
 
 def setup_database():
   conn = db_client.get()
   cursor = conn.cursor()
   cursor.execute('''
-    CREATE TABLE Product (
+    CREATE TABLE IF NOT EXISTS Products (
       id TEXT PRIMARY KEY,
       created_at TEXT,
       updated_at TEXT,

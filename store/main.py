@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
-from core.config import settings
-from controllers.api_router import router
-from db.setup_db import setup_database
+from store.core.config import settings
+from store.controllers.api_router import router
+from store.db.setup_db import setup_database
 
 class App(FastAPI):
   def __ini__(self, *args, **kwargs) -> None:
