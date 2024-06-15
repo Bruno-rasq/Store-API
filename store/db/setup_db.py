@@ -1,15 +1,13 @@
-import sqlite3
-from pathlib import Path
-#from store.core.config import settings
-
-root_path = Path(__file__).parent
+from .client import db_client
 
 def setup_database():
-  conn = sqlite3.connect(root_path / 'Products.db')
+  conn = db_client.get()
   cursor = conn.cursor()
   cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Produtos (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+    CREATE TABLE Product (
+      id TEXT PRIMARY KEY,
+      created_at TEXT,
+      updated_at TEXT,
       name TEXT NOT NULL,
       quantity INTEGER NOT NULL,
       price REAL NOT NULL,
