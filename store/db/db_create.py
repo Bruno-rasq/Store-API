@@ -1,9 +1,8 @@
-import sqlite3
-from store.db.db_client import DB_PATH
+from store.db.db_client import db_client
 
 
 def create_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = db_client.get_connection()
     try:
         curr = conn.cursor()
         curr.execute('''CREATE TABLE IF NOT EXISTS products (
@@ -25,8 +24,10 @@ def create_db():
             END;
         ''')
 
-        conn.commit()
+        db_client.client_commit()
+
     except Exception as err:
         raise err
+
     finally:
-        conn.close()
+        db_client.close_connection()

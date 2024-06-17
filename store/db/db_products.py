@@ -1,10 +1,9 @@
-import sqlite3
-from store.db.db_client import DB_PATH
+from store.db.db_client import db_client
 
 
 #[GET]
 def get_all_products_db():
-  conn = sqlite3.connect(DB_PATH)
+  conn = db_client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('SELECT * FROM products')
@@ -21,17 +20,18 @@ def get_all_products_db():
               "updated_at"  : row[6]
           }
           products.append(product)
-      conn.close()
       return products
+
   except Exception as err:
       raise err
+
   finally:
-      conn.close()
+      db_client.close_connection()
 
 
 #[GET]
 def get_product_by_id_db(product_id):
-  conn = sqlite3.connect(DB_PATH)
+  conn = db_client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('SELECT * FROM products WHERE id = ?', (product_id,))
@@ -48,17 +48,18 @@ def get_product_by_id_db(product_id):
           }
       else:
           product = None
-      conn.close()
       return product
+
   except Exception as err:
       raise err
+
   finally:
-      conn.close()
+      db_client.close_connection()
 
 
 #[POST]
 def insert_product__db(name: str, description: str, price: float, quantity: int):
-  conn = sqlite3.connect(DB_PATH)
+  conn = db_client.get_connection()
   try:
     curr = conn.cursor()
     curr.execute(
@@ -67,17 +68,18 @@ def insert_product__db(name: str, description: str, price: float, quantity: int)
       VALUES (?, ?, ?, ?)
       ''', (name, description, price, quantity)
     )
-    conn.commit()
+    db_client.client_commit()
 
   except Exception as err:
     raise err
+
   finally:
-    conn.close()
+    db_client.close_connection()
 
 
 #[PUT]
 def update_product_db(product_id, name, description, price, quantity):
-  conn = sqlite3.connect(DB_PATH)
+  conn = db_client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('''
@@ -85,21 +87,25 @@ def update_product_db(product_id, name, description, price, quantity):
           SET name = ?, description = ?, price = ?, quantity = ?, updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
       ''', (name, description, price, quantity, product_id))
-      conn.commit()
+      db_client.client_commit()
+
   except Exception as err:
       raise err
+
   finally:
-      conn.close()
+      db_client.close_connection()
 
 
 #[DELETE]
 def delete_product_db(product_id):
-  conn = sqlite3.connect(DB_PATH)
+  conn = db_client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('DELETE FROM products WHERE id = ?', (product_id,))
-      conn.commit()
+      db_client.client_commit()
+
   except Exception as err:
       raise err
+
   finally:
-      conn.close()
+      db_client.close_connection()
