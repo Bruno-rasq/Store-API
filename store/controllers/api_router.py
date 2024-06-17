@@ -1,45 +1,48 @@
-from typing import List
-from fastapi import APIRouter, HTTPException
-from store.schemas.product import ProductIn, ProductOUT
-from store.db.services_db import cadastrar_produto_db, get_produtos_db
+from fastapi import APIRouter
+
+# DB - metodos
+from store.db.db_products import get_all_products_db, get_product_by_id_db
+from store.db.db_products import insert_product__db
+from store.db.db_products import update_product_db
+from store.db.db_products import delete_product_db
+
+# models 
+from store.schemas.product import ProductIN
+
 
 router = APIRouter()
 
+
 @router.get("/")
 def root_path():
-  '''root path.'''
-  return {"messagem": "Hello"}
+  return {"message": "ok"}
 
 
-
-@router.post("/produtos", tags=["produtos"], response_model=ProductOUT)
-def cadastrar_produto(produto: ProductIn):
-  '''cadastrar um novo produto.'''
-  try:
-    novo_produto = cadastrar_produto_db(produto)
-    return novo_produto
-  except Exception as err:
-    HTTPException(status_code=500, detail=str(err))
-
-
-
-@router.get("/produtos", tags=["produtos"], response_model=List[ProductOUT])
+@router.get("/products", tags=["products"])
 def pegar_produtos():
-  '''pegar todos os produtos.'''
-  return get_produtos_db()
-  
+  return get_all_products_db()
 
-# @router.get("/produtos/{id}", tags=["produtos"], response_model=ProductIn)
-# def pegar_produto_id(id: int):
-#   '''pegar um produto pelo seu id.'''
-#   pass
 
-# @router.put("/produtos/{id}", tags=["produtos"], response_model=ProductIn)
-# def atualizar_produto(id: int, produto: ProductIn):
-#   '''atualizar um produto.'''
-#   pass
+@router.get("/products/{id}", tags=["products"])
+def pegar_produto_id(id: int):
+  try:
+    produto = get_product_by_id_db(id)
+    return produto
+  except Exception as err:
+    raise err
 
-# @router.delete("/produtos/{id}", tags=["produtos"], response_model=ProductIn)
-# def delete_produto(id: int):
-#   '''deletar um produto.'''
-#   pass
+
+@router.post('/products', response_model=ProductIN, tags=["products"])
+def cadastrar_produto(produto: ProductIN):
+  insert_product__db(produto.name, produto.description, produto.price, produto.quantity)
+  return produto
+
+
+@router.delete("/products/{id}", tags=["products"])
+def deletar_produto(id: int):
+  delete_product_db(id)
+
+
+@router.put("/products/{id}", tags=["products"])
+def update_produto(id: int, prod: ProductIN):
+  update_product_db(id, prod.name, prod.description, prod.price, prod.quantity)
