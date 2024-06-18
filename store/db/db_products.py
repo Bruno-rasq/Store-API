@@ -1,8 +1,10 @@
 from store.db.db_client import db_client
+from store.schemas.product import ProductOUT 
+from typing import List, Optional
 
 
 #[GET]
-def get_all_products_db():
+def get_all_products_db() -> List[ProductOUT]:
   conn = db_client.get_connection()
   try:
       curr = conn.cursor()
@@ -10,15 +12,15 @@ def get_all_products_db():
       rows = curr.fetchall()
       products = []
       for row in rows:
-          product = {
-              "id"          : row[0],
-              "name"        : row[1],
-              "description" : row[2],
-              "price"       : row[3],
-              "quantity"    : row[4],
-              "created_at"  : row[5],
-              "updated_at"  : row[6]
-          }
+          product = ProductOUT(
+              id         = row[0],
+              name       = row[1],
+              description = row[2],
+              price      = row[3],
+              quantity   = row[4],
+              created_at  = row[5],
+              updated_at  = row[6]
+          )
           products.append(product)
       return products
 
@@ -30,22 +32,22 @@ def get_all_products_db():
 
 
 #[GET]
-def get_product_by_id_db(product_id):
+def get_product_by_id_db(product_id) -> Optional[ProductOUT]:
   conn = db_client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('SELECT * FROM products WHERE id = ?', (product_id,))
       row = curr.fetchone()
       if row:
-          product = {
-              "id"          : row[0],
-              "name"        : row[1],
-              "description" : row[2],
-              "price"       : row[3],
-              "quantity"    : row[4],
-              "created_at"  : row[5],
-              "updated_at"  : row[6]
-          }
+          product = ProductOUT(
+              id         = row[0],
+              name       = row[1],
+              description = row[2],
+              price      = row[3],
+              quantity   = row[4],
+              created_at  = row[5],
+              updated_at  = row[6]
+          )
       else:
           product = None
       return product
@@ -69,12 +71,15 @@ def insert_product__db(name: str, description: str, price: float, quantity: int)
       ''', (name, description, price, quantity)
     )
     db_client.client_commit()
+    id = curr.lastrowid
+    return get_product_by_id_db(id)
 
   except Exception as err:
     raise err
 
   finally:
     db_client.close_connection()
+
 
 
 #[PUT]
@@ -88,6 +93,8 @@ def update_product_db(product_id, name, description, price, quantity):
           WHERE id = ?
       ''', (name, description, price, quantity, product_id))
       db_client.client_commit()
+
+      return get_product_by_id_db(product_id)
 
   except Exception as err:
       raise err
