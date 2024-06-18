@@ -5,11 +5,12 @@ from threading import local
 DB_PATH = Path(__file__).parent / "produtos.db"
 
 class SQLiteClient:
-    def __init__(self) -> None:
+    def __init__(self, path) -> None:
         self.local = local()
+        self.path = path
 
     def create_connection(self) -> sqlite3.Connection:
-        return sqlite3.connect(DB_PATH)
+        return sqlite3.connect(self.path)
 
     def get_connection(self):
         if not hasattr(self.local, 'connection'):
@@ -26,4 +27,4 @@ class SQLiteClient:
             self.local.connection.commit()
 
 
-db_client = SQLiteClient()
+db_client = SQLiteClient(DB_PATH)

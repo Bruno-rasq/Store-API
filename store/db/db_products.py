@@ -1,11 +1,11 @@
 from store.db.db_client import db_client
 from store.schemas.product import ProductOUT 
 from typing import List, Optional
-
+from store.db.db_client import SQLiteClient, db_client
 
 #[GET]
-def get_all_products_db() -> List[ProductOUT]:
-  conn = db_client.get_connection()
+def get_all_products_db(client: SQLiteClient) -> List[ProductOUT]:
+  conn = client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('SELECT * FROM products')
@@ -13,11 +13,11 @@ def get_all_products_db() -> List[ProductOUT]:
       products = []
       for row in rows:
           product = ProductOUT(
-              id         = row[0],
-              name       = row[1],
+              id          = row[0],
+              name        = row[1],
               description = row[2],
-              price      = row[3],
-              quantity   = row[4],
+              price       = row[3],
+              quantity    = row[4],
               created_at  = row[5],
               updated_at  = row[6]
           )
@@ -28,23 +28,23 @@ def get_all_products_db() -> List[ProductOUT]:
       raise err
 
   finally:
-      db_client.close_connection()
+      client.close_connection()
 
 
 #[GET]
-def get_product_by_id_db(product_id) -> Optional[ProductOUT]:
-  conn = db_client.get_connection()
+def get_product_by_id_db(client: SQLiteClient, product_id) -> Optional[ProductOUT]:
+  conn = client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('SELECT * FROM products WHERE id = ?', (product_id,))
       row = curr.fetchone()
       if row:
           product = ProductOUT(
-              id         = row[0],
-              name       = row[1],
+              id          = row[0],
+              name        = row[1],
               description = row[2],
-              price      = row[3],
-              quantity   = row[4],
+              price       = row[3],
+              quantity    = row[4],
               created_at  = row[5],
               updated_at  = row[6]
           )
@@ -56,12 +56,12 @@ def get_product_by_id_db(product_id) -> Optional[ProductOUT]:
       raise err
 
   finally:
-      db_client.close_connection()
+      client.close_connection()
 
 
 #[POST]
-def insert_product__db(name: str, description: str, price: float, quantity: int):
-  conn = db_client.get_connection()
+def insert_product__db(client: SQLiteClient, name: str, description: str, price: float, quantity: int):
+  conn = client.get_connection()
   try:
     curr = conn.cursor()
     curr.execute(
@@ -70,21 +70,20 @@ def insert_product__db(name: str, description: str, price: float, quantity: int)
       VALUES (?, ?, ?, ?)
       ''', (name, description, price, quantity)
     )
-    db_client.client_commit()
+    client.client_commit()
     id = curr.lastrowid
-    return get_product_by_id_db(id)
+    return get_product_by_id_db(db_client, id)
 
   except Exception as err:
     raise err
 
   finally:
-    db_client.close_connection()
-
+    client.close_connection()
 
 
 #[PUT]
-def update_product_db(product_id, name, description, price, quantity):
-  conn = db_client.get_connection()
+def update_product_db(client: SQLiteClient, product_id, name, description, price, quantity):
+  conn = client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('''
@@ -92,27 +91,27 @@ def update_product_db(product_id, name, description, price, quantity):
           SET name = ?, description = ?, price = ?, quantity = ?, updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
       ''', (name, description, price, quantity, product_id))
-      db_client.client_commit()
+      client.client_commit()
 
-      return get_product_by_id_db(product_id)
+      return get_product_by_id_db(db_client, product_id)
 
   except Exception as err:
       raise err
 
   finally:
-      db_client.close_connection()
+      client.close_connection()
 
 
 #[DELETE]
-def delete_product_db(product_id):
-  conn = db_client.get_connection()
+def delete_product_db(client: SQLiteClient, product_id):
+  conn = client.get_connection()
   try:
       curr = conn.cursor()
       curr.execute('DELETE FROM products WHERE id = ?', (product_id,))
-      db_client.client_commit()
+      client.client_commit()
 
   except Exception as err:
       raise err
 
   finally:
-      db_client.close_connection()
+      client.close_connection()

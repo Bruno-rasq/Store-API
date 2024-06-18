@@ -1,8 +1,8 @@
-from store.db.db_client import db_client
+from store.db.db_client import SQLiteClient
 
 
-def create_db():
-    conn = db_client.get_connection()
+def create_db(client: SQLiteClient):
+    conn = client.get_connection()
     try:
         curr = conn.cursor()
         curr.execute('''CREATE TABLE IF NOT EXISTS products (
@@ -24,10 +24,10 @@ def create_db():
             END;
         ''')
 
-        db_client.client_commit()
+        client.client_commit()
 
     except Exception as err:
         raise err
 
     finally:
-        db_client.close_connection()
+        client.close_connection()

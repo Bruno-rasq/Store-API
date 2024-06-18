@@ -12,6 +12,6 @@ class ProductIN(BaseModel):
 
 
 class ProductOUT(ProductIN, BaseModel):
-    id         : Optional[int]      = Field(None, description="The unique identifier of the product")
-    created_at : Optional[datetime] = Field(None, description="The timestamp when the product was created")
-    updated_at : Optional[datetime] = Field(None, description="The timestamp when the product was last updated")
+  id         : Optional[int]      = Field(None, description="The unique identifier of the product")
+  created_at : Optional[datetime] = Field(None, description="The timestamp when the product was created")
+  updated_at : Optional[datetime] = Field(None, description="The timestamp when the product was last updated")
