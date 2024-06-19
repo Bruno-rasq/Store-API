@@ -28,11 +28,10 @@ def pegar_produtos():
 
 @router.get("/products/{id}", tags=["products"], response_model=ProductOUT)
 def pegar_produto_id(id: int):
-  try:
-    produto = get_product_by_id_db(db_client, id)
-    return produto
-  except Exception as err:
-    raise err
+  product = get_product_by_id_db(db_client, id)
+  if product is None:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+  return product
 
 
 @router.post('/products', response_model=ProductOUT, tags=["products"])
