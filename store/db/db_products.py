@@ -109,7 +109,9 @@ def delete_product_db(client: SQLiteClient, product_id):
       curr = conn.cursor()
       curr.execute('DELETE FROM products WHERE id = ?', (product_id,))
       client.client_commit()
-
+      row_affect = curr.rowcount
+      return row_affect > 0
+    
   except Exception as err:
       raise err
 
