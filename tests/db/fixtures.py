@@ -1,9 +1,10 @@
 import pytest
+import os
 
 from tests.factories import ProductIN_data
-from store.db.db_client import db_client
+from store.db.db_client import db_client, DB_PATH
 from store.db.db_products import insert_product__db
-from store.db.db_create import drop_db_test, create_db
+from store.db.db_create import create_db
 
 
 @pytest.fixture(scope='module')
@@ -16,4 +17,5 @@ def setup_db():
 
   yield db_client
 
-  drop_db_test(db_client)
+  if os.path.exists(DB_PATH):
+    os.remove(DB_PATH)

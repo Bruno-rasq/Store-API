@@ -31,17 +31,3 @@ def create_db(client: SQLiteClient):
 
     finally:
         client.close_connection()
-
-
-def drop_db_test(client: SQLiteClient):
-  conn = client.get_connection()
-  try:
-    curr = conn.cursor()
-    curr.execute('DROP TABLE products')
-    client.client_commit()
-
-  except Exception as err:
-    raise err
-
-  finally:
-    client.close_connection()
