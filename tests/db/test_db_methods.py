@@ -1,8 +1,3 @@
-import pytest
-from fastapi.testclient import TestClient
-from store.main import app
-
-from tests.fixtures import setup_db
 from tests.factories import ProductIN_data
 
 from store.db.db_client import SQLiteClient
@@ -11,10 +6,6 @@ from store.db.db_products import insert_product__db, update_product_db
 
 from store.schemas.product import ProductOUT
 
-
-@pytest.fixture()
-def client():
-  return TestClient(app)
 
 
 

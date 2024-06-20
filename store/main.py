@@ -17,10 +17,12 @@ class App(FastAPI):
         )
 
 
+#substitui esse
 # @app.on_event("startup")
 # def setup_db():
 #   create_db(db_client)
 
+#por esse
 # @asynccontextmanager
 # async def lifespan(app: FastAPI):
 #     create_db(db_client)
