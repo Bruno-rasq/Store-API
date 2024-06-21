@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+
 from store.db.db_create import create_db
 from store.db.db_client import db_client
 from store.controllers.api_router import router
@@ -13,25 +14,23 @@ class App(FastAPI):
           *args,
           **kwargs,
           title=settings.PROJECT_NAME,
-          root_path=settings.ROOT_PATH
+          # root_path=settings.ROOT_PATH
         )
 
 
-#substitui esse
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db(db_client)
+    yield
+
+
+app = App(lifespan=lifespan)
+# app = App()
+app.include_router(router)
+
 # @app.on_event("startup")
 # def setup_db():
 #   create_db(db_client)
-
-#por esse
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     create_db(db_client)
-#     yield
-
-
-# app = App(lifespan=lifespan)
-app = App()
-app.include_router(router)
 
 
 if __name__ == "__main__":

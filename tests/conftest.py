@@ -8,9 +8,11 @@ from store.db.db_client import db_client, DB_PATH
 from store.db.db_products import insert_product__db
 from store.db.db_create import create_db
 
+
 @pytest.fixture()
 def client():
   return TestClient(app)
+
 
 @pytest.fixture(scope='module')
 def setup_db():
@@ -25,7 +27,3 @@ def setup_db():
   if os.path.exists(DB_PATH):
     os.remove(DB_PATH)
 
-
-@pytest.fixture
-def product_url():
-  return "/products/"
