@@ -24,13 +24,9 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = App(lifespan=lifespan)
 # app = App()
+app = App(lifespan=lifespan)
 app.include_router(router)
-
-# @app.on_event("startup")
-# def setup_db():
-#   create_db(db_client)
 
 
 if __name__ == "__main__":

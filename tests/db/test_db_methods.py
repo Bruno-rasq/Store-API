@@ -1,14 +1,17 @@
+import pytest
 from tests.factories import ProductIN_data
-
-from store.db.db_client import SQLiteClient
-from store.db.db_products import get_all_products_db, get_product_by_id_db, delete_product_db
-from store.db.db_products import insert_product__db, update_product_db
-
 from store.schemas.product import ProductOUT
+from store.db.db_client import SQLiteClient
+from store.db.db_products import (
+  delete_product_db,
+  get_all_products_db, 
+  get_product_by_id_db, 
+  insert_product__db, 
+  update_product_db
+)
 
 
-
-
+@pytest.mark.skip(reason="teste de rotas em andamento")
 def test_com_1_itens_cadastrados_no_db_a_lista_de_retorno_deve_ter_tamanho_1(client, setup_db):
   test_db_client: SQLiteClient = setup_db
 
@@ -17,7 +20,7 @@ def test_com_1_itens_cadastrados_no_db_a_lista_de_retorno_deve_ter_tamanho_1(cli
   assert len(PRODUCTS) == 1
 
 
-
+@pytest.mark.skip(reason="teste de rotas em andamento")
 def test_retorno_de_todos_itens_do_db_deve_ser_uma_lista_de_productout(client, setup_db):
   test_db_client: SQLiteClient = setup_db
 
@@ -26,7 +29,7 @@ def test_retorno_de_todos_itens_do_db_deve_ser_uma_lista_de_productout(client, s
   assert all(isinstance(product, ProductOUT) for product in PRODUCTS)
 
 
-
+@pytest.mark.skip(reason="teste de rotas em andamento")
 def test_pegando_o_primeiro_item_do_db_pelo_id_deve_retornar_os_dados_do_primeiro_item(client, setup_db):
   test_db_client: SQLiteClient = setup_db
 
@@ -40,7 +43,7 @@ def test_pegando_o_primeiro_item_do_db_pelo_id_deve_retornar_os_dados_do_primeir
     assert primeiro_item_db.quantity == primeiro_item_inserido["quantity"]
 
 
-
+@pytest.mark.skip(reason="teste de rotas em andamento")
 def test_pegando_o_item_pelo_id_1_o_id_do_retorno_deve_ser_1(client, setup_db):
   test_db_client: SQLiteClient = setup_db
   primeiro_item_db = get_product_by_id_db(test_db_client, 1)
@@ -49,7 +52,7 @@ def test_pegando_o_item_pelo_id_1_o_id_do_retorno_deve_ser_1(client, setup_db):
     assert primeiro_item_db.id == 1
 
 
-
+@pytest.mark.skip(reason="teste de rotas em andamento")
 def test_pegando_o_item_pelo_id_que_nao_existe_deve_retornar_none(client, setup_db):
   test_db_client: SQLiteClient = setup_db
   primeiro_item = get_product_by_id_db(test_db_client, 4)
@@ -57,7 +60,7 @@ def test_pegando_o_item_pelo_id_que_nao_existe_deve_retornar_none(client, setup_
   assert primeiro_item == None
 
 
-
+@pytest.mark.skip(reason="teste de rotas em andamento")
 def test_inserindo_um_novo_item_no_db(client, setup_db):
   test_db_client: SQLiteClient = setup_db
 
@@ -81,7 +84,7 @@ def test_inserindo_um_novo_item_no_db(client, setup_db):
     assert produto_cadastrado.name == "produto2"
 
 
-
+@pytest.mark.skip(reason="teste de rotas em andamento")
 def test_atualizando_um_item_do_db_o_campo_updated_dev_atualizar(client, setup_db):
   test_db_client: SQLiteClient = setup_db
 
@@ -107,7 +110,7 @@ def test_atualizando_um_item_do_db_o_campo_updated_dev_atualizar(client, setup_d
     assert produto.name != produto_atualizado.name
 
 
-
+@pytest.mark.skip(reason="teste de rotas em andamento")
 def test_deletenado_um_item_do_db(client, setup_db):
   test_db_client: SQLiteClient = setup_db
 

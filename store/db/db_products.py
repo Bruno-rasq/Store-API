@@ -1,4 +1,3 @@
-from store.db.db_client import db_client
 from store.schemas.product import ProductOUT 
 from typing import List, Optional
 from store.db.db_client import SQLiteClient, db_client

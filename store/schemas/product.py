@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 
 class ProductIN(BaseModel):
@@ -15,3 +15,8 @@ class ProductOUT(ProductIN, BaseModel):
   id         : Optional[int]      = Field(None, description="The unique identifier of the product")
   created_at : Optional[datetime] = Field(None, description="The timestamp when the product was created")
   updated_at : Optional[datetime] = Field(None, description="The timestamp when the product was last updated")
+
+
+
+class ProductsDB(BaseModel):
+  products  : List[ProductOUT]
